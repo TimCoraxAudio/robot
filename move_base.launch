@@ -1,0 +1,41 @@
+<launch>
+
+ <!-- Run the map server --> 
+    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+	<param name="resolution" value="0.02" />
+	<param name="frame_id" type="string" value="map" />
+	<param name="base_frame_id" type="string" value="base_link" />
+	<param name="pointcloud_max_z" value="0.5" />
+	<param name="pointcloud_min_z" value="0.02" />
+	<!-- maximum range to integrate (speedup!) -->
+	<param name="sensor_model/max_range" value="2.0" />
+	<param name="latch" type="bool" value="false" />
+	<!-- data source to integrate (PointCloud2) -->
+	<remap from="cloud_in" to="/camera/stream/1/cloud" />
+	</node>
+
+<!-- Place map frame at odometry frame -->
+  <node pkg="tf" type="static_transform_publisher" name="map_odom_broadcaster"
+      args="0 0 0 0 0 0 map odom 100"/>
+      
+   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <remap from="cmd_vel" to="RosAria/cmd_vel"/>
+    <remap from="odom" to="odom"/>
+    <param name="shutdown_costmaps" type="bool" value="true" />
+    <param name="footprint_padding" value="0.005" />
+    <param name="controller_frequency" value="10.0" />
+    <param name="controller_patience" value="3.0" />
+
+    <param name="oscillation_timeout" value="30.0" />
+    <param name="oscillation_distance" value="0.5" />
+    <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+    <param name="base_global_planner" value="global_planner/GlobalPlanner" />
+    
+    <rosparam file="/home/rock64/catkin_ws/src/uow_nav/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+    <rosparam file="/home/rock64/catkin_ws/src/uow_nav/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="/home/rock64/catkin_ws/src/uow_nav/local_costmap_params.yaml" command="load" />
+    <rosparam file="/home/rock64/catkin_ws/src/uow_nav/global_costmap_params.yaml" command="load" /> 
+    <rosparam file="/home/rock64/catkin_ws/src/uow_nav/base_local_planner_params.yaml" command="load" />
+ </node>
+
+</launch> 

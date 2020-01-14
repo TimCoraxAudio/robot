@@ -1,0 +1,7 @@
+<launch>
+  <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+    <rosparam command="load" file="$(find uow_nav)/pc_to_laserscan_params.yaml" />
+    <remap from="cloud_in" to="camera/stream/1/cloud"/>
+    <!--remap from="scan" to="camera/scan"/-->
+  </node>
+</launch>

@@ -1,0 +1,19 @@
+<launch>
+    <master auto="start"/>
+
+    <!--include file="$(find amcl)/examples/amcl_omni.launch" /-->
+    <!--
+    <node pkg="amcl" type="amcl" name="amcl" output="screen" >
+      <param name="use_map_topic" type="bool" value="true" />
+      <param name="map" value="projected_map" />
+    </node>
+    -->
+    
+    <include file="$(find uow_nav)/amcl_diff.launch" />
+    <include file="$(find uow_nav)/pc_to_laserscan.launch" />
+    <!--
+    include file="$(find uow_nav)/ekf_localization.launch" /
+    -->
+    <include file="$(find uow_nav)/configuration.launch" />
+    <include file="$(find uow_nav)/move_base.launch" />
+</launch>
